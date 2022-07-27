@@ -7,5 +7,7 @@
  - description:
  
  ## R Data Workshop:
- - files:[data_management_tidyverse.R](https://github.com/VTQuantMethodsEEB/ibrc_workshop/data_management_tidyverse.R)
- - description:
+ - lecture files:
+ - description: slides for talk
+ - code files:[data_management_tidyverse.R](https://github.com/VTQuantMethodsEEB/ibrc_workshop/blob/main/data_management/data_management_tidyverse.R)
+ - run code and follow along with presentation

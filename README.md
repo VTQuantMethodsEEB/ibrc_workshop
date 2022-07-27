@@ -6,6 +6,6 @@
  - files:
  - description:
  
- ## R Data:
- - files:
+ ## R Data Workshop:
+ - files:[data_management_tidyverse.R](https://github.com/VTQuantMethodsEEB/ibrc_workshop/data_management_tidyverse.R)
  - description:

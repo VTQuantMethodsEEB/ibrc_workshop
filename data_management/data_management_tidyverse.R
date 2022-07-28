@@ -1,6 +1,11 @@
 
 ####---------------------tidyverse----------------------####
 
+# resources:
+# https://tidyverse.tidyverse.org/
+# https://dplyr.tidyverse.org/  
+# https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf
+
 # the tidyverse is a powerful set of seperate packages
 # with functions that make working with data in R much easier
 # however tidyverse functions often rely heavily on piping

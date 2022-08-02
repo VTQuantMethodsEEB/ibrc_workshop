@@ -6,7 +6,7 @@
 # https://dplyr.tidyverse.org/  
 # https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf
 
-# the tidyverse is a powerful set of seperate packages
+# the tidyverse is a powerful set of separate packages
 # with functions that make working with data in R much easier
 # however tidyverse functions often rely heavily on piping
 # this is a pipe : %>%
@@ -139,7 +139,7 @@ head(batdat_count)
 # but we could imagine wanting to test the abundance of one species 
 # and how that influences another
 # for example, does the number of MYLU influence the number of MYSE?
-# for that, we would need to make columns if each species count
+# for that, we would need to make columns of each species count
 # with a row for a site and a date
 
 #pivot_wider is how we take long data, and make it wide
@@ -168,8 +168,11 @@ batcounts.wide = batcount %>%
 batcounts.long = batcounts.wide %>% 
   pivot_longer(
     cols = c("EPFU","MYLU","MYSE","PESU"), 
+    #what are the existing columns I want to make into rows?
     names_to =   "species",
+    #put the names of the columns in a column called 'species'
     values_to = "count"
+    #the values that were in each of the columns get moved to a column called 'count'
   )
 
 View(batcounts.long)
@@ -179,6 +182,8 @@ View(batcounts.long)
 batcounts.long = batcounts.wide %>% 
   pivot_longer(
     cols = c(starts_with("MY"), "EPFU", "PESU"),
+    #if all the columns start with the same thing (or many of them)
+    #we can use 'starts_with
     names_to =   "species",
     values_to = "count"
   )
@@ -188,6 +193,7 @@ View(batcounts.long)
 batcounts.long = batcounts.wide %>% 
   pivot_longer(
     cols = -c(site, date),
+    #this says use every column but site and date
     names_to =   "species",
     values_to = "count"
   )

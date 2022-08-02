@@ -1,0 +1,298 @@
+---
+title: "Managing Data in R"
+author: "KEL - Quantitative Methods"
+output:
+  ioslides_presentation: default
+  beamer_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+```
+
+## Introducing Tidyverse
+- the tidyverse is a powerful set of separate packages
+- https://tidyverse.tidyverse.org/
+- powerful packages within the tidyverse include:
+-  dplyr (management & manipulation)
+-  tidyr (cleaning)
+- stringr (dealing with words inside columns)
+- [lubridate](https://lubridate.tidyverse.org/) (dealing with dates/times)
+
+## Tidy(ing) data
+
+Hadley Wickham has defined a concept of [tidy
+data](http://www.jstatsoft.org/v59/i10/paper), and has
+introduced the `tidyverse` package.
+
+-   Each variable is in a column
+-   Each observation is in a row
+-   "Long" rather than "wide" form
+-   Sometimes duplicates data
+-   Statistical modeling tools and graphical tools (especially the
+    **ggplot2** package) in R work best with long form
+    
+## An example of tidy data
+```{r, out.width = "800px",echo=F}
+knitr::include_graphics("tidy_pic.png")
+```
+
+## Putting your data in tidy format
+- Discerning what is a variable can be hard when making data files
+- For example, species in my bat dataset is usually a single variable
+- I usually also include a "count" column (the number of individuals at a site)
+- But what if I wanted to test the effect of the count of one species (e.g.MYSE)
+  on another? 
+- I'd need to rearrange
+
+## Piping
+- tidyverse syntax is VERY different from base R
+- it relies on using `%>%`
+- this is called a pipe
+- it says the word "then"
+
+## First load the package
+```{r load_tidyverse}
+#install if you don't have it
+library(tidyverse)
+```
+
+## Example
+```{r}
+iris %>%
+# This says take the 'built-in' dataset iris
+  # THEN filter just the iris species == setosa
+  filter(Species=="setosa")
+
+  
+```
+
+## Critical tools for managing data in tidyverse
+
+- `pivot_longer`, `pivot_wider`
+- `mutate`: add a column
+- `select`: select columns
+- `filter`: select rows
+- `group_by`: group then do something (usually mutate or summarise)
+- `summarise`: make a summary table
+- `arrange`: sort
+- `left_join`: merge [see other `join` options](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+
+## Read in two datasets
+- you will need to tell R where to find them on your computer
+
+- I am using an .Rproj file, which sets my working directory 
+
+- https://github.com/VTQuantMethodsEEB/ibrc_workshop/tree/main/data_management
+
+## First read in batdat, each row is a bat
+
+```{r load_batdat, echo=T}
+# in this dataset, each row is a bat that 
+# is positive or negative for P. destructans
+batdat = read.csv("bat_data.csv")
+head(batdat)
+
+```
+
+## Then, read in batcount, each row is a site
+```{r load_bat_count, echo=T}
+# in this dataset, each row the count of hibernation site
+# for a partcular species on a particular date
+# even though sites were counted on the same date
+# species are repeated across dates
+batcount = read.csv("bat_count.csv")
+head(batcount)
+
+
+```
+
+
+## Group by
+ - `group_by` is my favorite tidyverse command which has cut my need to write loops in half
+ - `group_by` allows you to do calculations on groups of things, for example, by species or year
+- `group_by` is kind of like using Excel's `filter`
+- For example, if I group_by `species, date`, this is the equivalent in Excel of selecting a species (e.g. MYLU) and a specific date (e.g. March 1 2016, 3/1/16) except group_by does this for every species and date combination in your dataset
+- This is incredibly useful because in other programs, you might need to write a for loop to have this capability
+
+## Group by species
+```{r group_by_example}
+batdat$lgdL = log10(batdat$gdL)
+batdat %>% 
+  group_by(species) %>% 
+    summarise(mean.fungal.loads=mean(lgdL,na.rm=TRUE))
+```
+
+## Summarise versus Mutate
+ - `summarise` creates a new dataframe 
+ - `mutate` does a calculation where it add a new column to your existing dataframe
+ 
+## Importance of assigning 
+```{r}
+fungal.load.table = batdat %>% 
+  group_by(species) %>% 
+  summarise(mean.fungal.loads=mean(lgdL,na.rm=TRUE))
+
+fungal.load.table
+
+```
+
+## Assigning
+- When using summarise, it's best to call your summarised object a new name (e.g. fungal.load.table)
+- This is typically not necessary when using mutate which just adds a column to an existing dataset
+ 
+```{r mutate example}
+batdat = batdat %>% 
+  #take batdat, then group by somethings
+  #we re-assign batdat to batdat because we want to add the column to that dataframe
+    group_by(site,species,date) %>% 
+  #you can group_by multiple things
+    mutate(sample.size=n())
+#this adds a column to the dataframe 
+#using the function n(), which counts things (e.g n rows in the group)
+```
+
+## What does our dataframe look like now?
+```{r looking at new dataframe}
+head(batdat %>%
+       select(c("swab_id", "site","species","date","gd","sample.size")))
+#this is just showing a few columns for effect
+```
+
+## Joining
+- Joining datasets together is a useful skill, especially if we have two datasets we need to match on a specific column or set of columns
+- https://dplyr.tidyverse.org/reference/mutate-joins.html
+- Always call your new dataframe something new; don't write over and old dataframe in case you make a mistake joining
+
+## Join functions
+- `inner_join()`: includes all rows in x and y.
+- when inner joining, non-matching rows will be dropped!
+- `left_join()`: includes all rows in x.
+- when left joining, every row in x is kept, but only those matching x are kept in y
+- `right_join()`: includes all rows in y.
+- when right joining, every row in y is kept, but only those matching y are kept in x
+- `full_join()`: includes all rows in x or y.
+- every row is kept in both x and y
+
+## Joining actual datasets
+- We frequently have data coming from different sources (lab, field, etc.)
+- Let's join our infection data with our count data
+- We might want to do this to ask 'How do bat infections at a site influence bat abundance at the same site?'
+
+## Join batdat and batcount
+```{r}
+batdat_count = left_join(
+  x = batdat,
+  y = batcount,
+  by = c("site","species","date")
+  #columns to join on
+)
+head(batdat_count %>%
+       select(c("swab_id","site","date","species","count")))
+```
+## Comparing to right_join to left_join
+```{r}
+count_fungal = right_join(
+# using the fungal load table we create above
+  x = fungal.load.table,
+  y = batcount,
+  by = c("species")
+)
+# this keeps only the rows in bat count
+# we don't have a row for substrate, because we don't have
+# a count for substrate
+
+head(count_fungal)
+```
+
+## Pivoting
+- https://tidyr.tidyverse.org/articles/pivot.html
+- sometimes our datasets are not in the format we want for an analysis
+
+## Why pivot?
+```{r}
+head(batdat_count)
+# right now, species is in long format
+# but we could imagine wanting to test the abundance of one species 
+# and how that influences another
+# for example, does the number of MYLU influence the number of MYSE?
+# for that, we would need to make columns of each species count
+# with a row for a site and a date
+
+```
+
+
+## `pivot_wider` is how we take long data, and make it wide
+```{r}
+batcounts.wide<- batcount %>% 
+  #this says - make a new df called batcounts.wide using bat counts
+  pivot_wider(names_from = species, 
+              values_from = count
+              ) 
+##make columns for each of the values in the species column and fill those columns with values from the count column
+head(batcounts.wide)
+```
+
+
+## adding 0s into a `pivot`
+- when we perform this, it automatically fills missing with NAs but we know that missing actually mean 0
+```{r}
+batcounts.wide = batcount %>% 
+  pivot_wider(
+  names_from = species, 
+  values_from = count,
+  values_fill = 0
+)
+head(batcounts.wide)
+```
+
+## Going from wide to long format
+- more often, we might be working in the opposite direction
+- A more common issue is that programs output  information in columns that we would rather have in rows
+
+```{r}
+
+batcounts.long = batcounts.wide %>% 
+  pivot_longer(
+    cols = c("EPFU","MYLU","MYSE","PESU"), 
+    #what are the existing columns I want to make into rows?
+    names_to =   "species",
+    #put the names of the columns in a column called 'species'
+    values_to = "count"
+    #the values that were in each of the columns get moved to a column called 'count'
+  )
+```
+
+## Check out new batcounts.long
+```{r}
+head(batcounts.long)
+
+```
+
+
+## Often, multiple ways to do the same thing
+```{r}
+#option #2
+batcounts.long = batcounts.wide %>% 
+  pivot_longer(
+    cols = c(starts_with("MY"), "EPFU", "PESU"),
+    #if all the columns start with the same thing (or many of them)
+    #we can use 'starts_with
+    names_to =   "species",
+    values_to = "count"
+  )
+
+```
+
+## Option 3 - pivoting longer
+```{r}
+batcounts.long = batcounts.wide %>% 
+  pivot_longer(
+    cols = -c(site, date),
+    #this says use every column but site and date
+    names_to =   "species",
+    values_to = "count"
+  )
+```
+
+

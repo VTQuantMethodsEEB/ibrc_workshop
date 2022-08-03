@@ -116,20 +116,6 @@ batdat_count = left_join(
 View(batdat_count)
 # now, every row in batdat remains, and we have merged in counts
 
-# comparing to right_join
-# using the fungal load table we create above
-
-count_fungal = right_join(
-  x = fungal.load.table,
-  y = batcount,
-  by = c("species")
-)
-
-View(count_fungal)
-# this keeps only the rows in bat count
-# we don't have a row for substrate, because we don't have
-# a count for substrate
-
 ## Pivoting
 # https://tidyr.tidyverse.org/articles/pivot.html
 #sometimes our datasets are not in the format we want for an analysis

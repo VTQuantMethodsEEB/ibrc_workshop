@@ -76,6 +76,7 @@ iris %>%
 - `group_by`: group then do something (usually mutate or summarise)
 - `summarise`: make a summary table
 - `arrange`: sort
+- `bind_rows`: combines dataframes by stacking them on top of each other - keeps all columns; will make duplicates if the columns don't match (e.g 'species', 'Species')
 - `left_join`: merge [see other `join` options](https://dplyr.tidyverse.org/reference/mutate-joins.html)
 
 ## Read in two datasets
@@ -189,20 +190,6 @@ batdat_count = left_join(
 )
 head(batdat_count %>%
        select(c("swab_id","site","date","species","count")))
-```
-## Comparing to right_join to left_join
-```{r}
-count_fungal = right_join(
-# using the fungal load table we create above
-  x = fungal.load.table,
-  y = batcount,
-  by = c("species")
-)
-# this keeps only the rows in bat count
-# we don't have a row for substrate, because we don't have
-# a count for substrate
-
-head(count_fungal)
 ```
 
 ## Pivoting

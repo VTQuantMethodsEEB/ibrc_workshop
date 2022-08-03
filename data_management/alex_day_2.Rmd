@@ -1,0 +1,97 @@
+---
+title: "alex's slides"
+output:
+  ioslides_presentation: default
+  beamer_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+```
+## Read in data
+```{r}
+batdat<-read.csv("/Users/alexg8/Desktop/IBRC workshops/R Crash course/bat_data.csv")
+```
+
+## Naming conventions
+
+The R environment is very sensitive to how you name objects and slight differences are important. For example, "m" and "M" are considered different names and R would recognize them as different objects. The names of R objects also have to start with a letter, not a number. Below are some additional good naming practices: 
+
+* Use mostly numbers, underscores (_), and dots (.) in your names.
+* Don't use potentially confusing names like I or O
+* Don't use built-in names (like c, list, or data) for variables.
+* Make readable variable names using camelCase, snake_case, or kebab.case
+* Avoid variableNamesThatAreExcessivelyLong
+
+## Data types
+
+There are several types of data that R recognizes, listed below: 
+
+* Logical: True/False data
+* Numeric: All real numbers with or without decimal values
+* Integer: Real numbers without decimal values. 
+* Character: String data. Thing of this as any unique string of values, such as "1dkdl;" or "Apple_Pie"
+* Factor: Used to describe items that can have a known set of values (gender, social class, etc.). Categorical variables, in statistical terms. 
+* Date: calendar date, e.g. "10-22-1994"
+
+## What type of data do we have? 
+
+A quick way to check what kind of data we have in our dataframe is with the str() function:
+```{r}
+str(batdat)
+```
+
+## Dates
+Dates are notoriously difficult to work with in R and their format when being read in with a dataset depends on if you are using a Mac or PC. On a mac, the default is mo/day/two digit year – e.g. 01/13/18 is January 13, 2018, but on a PC the default is “01/13/2018”. This can result in some frustration between people sharing scripts! 
+
+Additionally, dates will often be read into R as factor data, so it is often necessary to define the format of your date data yourself. 
+
+## Dates continued
+As you can see, currently the "date" column in our dataframe is being recognized as a character rather than a date:
+
+```{r}
+str(batdat)
+```
+
+## Dates continued
+To fix that, we need to manually define the date column as being date data, using the function as.Date(): 
+
+```{r}
+batdat$date<-as.Date(batdat$date, format="%m/%d/%y")
+str(batdat)
+```
+
+## Long vs. wide format of data
+The shape of your data matters to R! The easiest way for R to understand your data is if every row in your dataframe is a unique observation. Sometimes, when we are entering data into excel, we have a tendency to add new observations or data as new columns (wide), rather than new rows (long). __This will cause you headaches down the line__
+
+Luckily, the package "tidyverse" has some helpful functions to change the shape of your data. 
+```{r}
+#install.packages(tidyverse)
+library(tidyverse)
+```
+
+## Long vs wide format of data
+Let's take a look at our data:
+```{r}
+head(batdat)
+```
+As you can see, each row here is an observation (long format), which is what we want. 
+
+## Long vs wide format of data
+However, if for some reason we wanted our data in wide format, we can use the tidyverse function spread() to do so. In the below example, we are going to make a unique column for each date and fill our dataframe with gdL (fungal load data):
+
+```{r}
+wide.data <- spread(data=batdat, date, gdL)
+head(wide.data)
+```
+
+## Long vs wide format of data
+If we want to change our dataframe back to its original shape (long format), we can use the tidyverse function gather():
+
+```{r}
+long.data <- gather(data=wide.data, "2015-02-27", "2015-03-04", "2015-03-11", "2015-11-07", "2015-11-09", "2015-11-20", "2016-03-03", "2016-03-07", "2016-03-08", "2017-03-01", "2017-03-10", "2017-03-12", key=date, value=gdL, na.rm=T)
+```
+
+## Checking Data
+
+## Plot tools to detect errors 

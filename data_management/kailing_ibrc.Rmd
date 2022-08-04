@@ -1,6 +1,6 @@
 ---
 title: "Maintaining data and building pipelines in R"
-author: "KEL, ATG, MJK - IBRC Workshop"
+author: "Kate E. Langwig, Alex T. Grimaudo, Macy J. Kailing - IBRC 2022"
 output:
   ioslides_presentation: 
     incremental: true

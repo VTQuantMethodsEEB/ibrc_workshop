@@ -1,5 +1,5 @@
 ---
-title: "alex's slides"
+title: 
 output:
   ioslides_presentation: default
   beamer_presentation: default
@@ -8,15 +8,49 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = T)
 ```
-## Read in data
-```{r}
-batdat<-read.csv("/Users/alexg8/Desktop/IBRC workshops/R Crash course/bat_data.csv")
-```
+## You have collected your data... now what? 
+Now you are ready to work with your data in R!
+
+* Important naming conventions
+* Types of data R recognizes
+  + how to work with dates
+* Checking your data for errors
+  + unique()
+  + hist()
+  + head()
+  + summary()
+  + plot()
+  
+## Read in your data
+Please navigate to the below URL to access the data we will be using today:
+
+https://github.com/VTQuantMethodsEEB/ibrc_workshop
+
+
+## Read in your data
+__read.csv()__ is the function to use when reading your spreadsheets into R. 
+
+Using .csv files to store and read-in your data is important!
+
+* Stores data in a text format (human-readable; transferrable)
+* Can store large amounts of data in simple format
+* Can be read by most programs
 
 ## Naming conventions
+The R environment is very sensitive to how you name objects and slight differences are important.
 
-The R environment is very sensitive to how you name objects and slight differences are important. For example, "m" and "M" are considered different names and R would recognize them as different objects. The names of R objects also have to start with a letter, not a number. Below are some additional good naming practices: 
+* "Maple"
+* " Maple"
+* "maple"
+* "maple "
+* "maple."
 
+Make sure your naming is consistent __in your .csv files!__
+
+## Naming conventions
+Additional good practices when naming things in R: 
+
+* The names of R objects also have to start with a letter, not a number. 
 * Use mostly numbers, underscores (_), and dots (.) in your names.
 * Don't use potentially confusing names like I or O
 * Don't use built-in names (like c, list, or data) for variables.
@@ -24,74 +58,85 @@ The R environment is very sensitive to how you name objects and slight differenc
 * Avoid variableNamesThatAreExcessivelyLong
 
 ## Data types
-
 There are several types of data that R recognizes, listed below: 
 
-* Logical: True/False data
-* Numeric: All real numbers with or without decimal values
-* Integer: Real numbers without decimal values. 
-* Character: String data. Thing of this as any unique string of values, such as "1dkdl;" or "Apple_Pie"
-* Factor: Used to describe items that can have a known set of values (gender, social class, etc.). Categorical variables, in statistical terms. 
-* Date: calendar date, e.g. "10-22-1994"
+* __Logical__: True/False data
+* **Numeric**: All real numbers with or without decimal values
+* **Integer**: Real numbers without decimal values. 
+* **Character**: String data. Thing of this as any unique string of values, such as "1dkdl;" or "Apple_Pie". This is the default data type when R does not recognize data as being of another
+type. 
+* **Factor**: Used to describe items that can have a known set of values (species, habitat, etc.). Categorical variables, in statistical terms. 
+* **Date**: calendar date, e.g. "10-22-1994"
 
 ## What type of data do we have? 
 
-A quick way to check what kind of data we have in our dataframe is with the str() function:
-```{r}
-str(batdat)
-```
+A quick way to check what kind of data we have in our dataframe is with the __str() function__
 
 ## Dates
-Dates are notoriously difficult to work with in R and their format when being read in with a dataset depends on if you are using a Mac or PC. On a mac, the default is mo/day/two digit year – e.g. 01/13/18 is January 13, 2018, but on a PC the default is “01/13/2018”. This can result in some frustration between people sharing scripts! 
+Dates in R are notorious despite being common forms of data!
 
-Additionally, dates will often be read into R as factor data, so it is often necessary to define the format of your date data yourself. 
+* Default format on Mac: mo/day/two digit year – e.g. 01/13/18 is January 13, 2018
+* Default format on PC: mo/day/four digit year - e.g. 01/13/2018
 
-## Dates continued
-As you can see, currently the "date" column in our dataframe is being recognized as a character rather than a date:
+We can tell R to read our data as dates using __as.Date()__. 
 
-```{r}
-str(batdat)
-```
+## Dates: lubridate
+'__Lubridate__' is a package built to make reading and changing date data easy. 
 
-## Dates continued
-To fix that, we need to manually define the date column as being date data, using the function as.Date(): 
-
-```{r}
-batdat$date<-as.Date(batdat$date, format="%m/%d/%y")
-str(batdat)
-```
-
-## Long vs. wide format of data
-The shape of your data matters to R! The easiest way for R to understand your data is if every row in your dataframe is a unique observation. Sometimes, when we are entering data into excel, we have a tendency to add new observations or data as new columns (wide), rather than new rows (long). __This will cause you headaches down the line__
-
-Luckily, the package "tidyverse" has some helpful functions to change the shape of your data. 
-```{r}
-#install.packages(tidyverse)
-library(tidyverse)
-```
-
-## Long vs wide format of data
-Let's take a look at our data:
-```{r}
-head(batdat)
-```
-As you can see, each row here is an observation (long format), which is what we want. 
-
-## Long vs wide format of data
-However, if for some reason we wanted our data in wide format, we can use the tidyverse function spread() to do so. In the below example, we are going to make a unique column for each date and fill our dataframe with gdL (fungal load data):
-
-```{r}
-wide.data <- spread(data=batdat, date, gdL)
-head(wide.data)
-```
-
-## Long vs wide format of data
-If we want to change our dataframe back to its original shape (long format), we can use the tidyverse function gather():
-
-```{r}
-long.data <- gather(data=wide.data, "2015-02-27", "2015-03-04", "2015-03-11", "2015-11-07", "2015-11-09", "2015-11-20", "2016-03-03", "2016-03-07", "2016-03-08", "2017-03-01", "2017-03-10", "2017-03-12", key=date, value=gdL, na.rm=T)
-```
+* Can turn numerical data into dates: 20101215 -> 2010-12-15
+* Can quickly change format of dates with simple functions
+* Helpful when extracting data from dates (for example, if you 
+just want to extract month data from your dates)
+* Useful when handling timezone differences. 
 
 ## Checking Data
+__Checking your data is very important!__ R can only work with the data you give it -- make sure you're giving it good data. Check for common sources of falty data:
 
-## Plot tools to detect errors 
+* Naming inconsistencies
+  + Follow good naming conventions!
+* Duplicated data
+  + Are your repeating values real, or a product of a bug in your code? 
+* Data that doesn't make sense biologically
+  + A little brown bat weighing 72 grams whereas the others weighed around 7-8 grams probably
+  isn't real! 
+  
+__Where should you correct your data?__
+
+## Checking Data
+Some useful tools in R to check your data for errors:
+
+* head() -- gives you first rows of your dataframe
+  + This is a good first pass
+* unique() -- returns all of the unique values contained in a specified dataset
+  + This is particularly useful when looking for naming inconsistencies
+* hist() -- This will show you the frequency distribution of your specified data. 
+  + Good for identifying anomalies or outliers in your data. __Interpret carefully!__
+
+## Checking Data
+Some useful tools in R to check your data for errors:
+
+* summary() -- Returns summary statistics of your specified data. 
+  + Again, good for identifying anomalies or outliers in your data. 
+* Plot your data! 
+  + plot() or ggplot() 
+  + Visualize the shape of your data. Does something look off? 
+  
+## Checking Data
+Check your data frequently! You should check your data when you:
+
+* Read in its .csv file.
+* Change the shape of your data.
+* Merge datasets.
+* Do calculations and make new datasets.  
+
+## Version control
+Using version control and management services will vastly reduce the chance
+a serious error sneaks by. 
+
+* **GitHub** (where you downloaded the data today) is a common code management
+service.
+  + Allows team members to collaborate on code.
+  + Version control and track-changes.
+  + Most journals today ask for your code, and GitHub repositories are a 
+  common way for it to be published. 
+

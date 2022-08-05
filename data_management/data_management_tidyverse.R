@@ -1,4 +1,59 @@
+#### Read in your data
 
+batdat = read.csv("data_management/bat_data.csv")
+# The function read.csv() reads in your .csv file containing all your data
+# The green text within the " " marks indicates where your file is (its directory),
+# which you will need to specify. 
+
+head(batdat) 
+# This returns the first 6 lines of data from your new dataframe, "batdat"
+
+str(batdat)
+# This tells you the type of data contained in your batdat dataframe. 
+# As you can see, our "date" column is currently being read by R 
+# as a character, not as a date. We need to change that!
+
+
+#### Formatting dates
+
+batdat$date<-as.Date(batdat$date, format="%m/%d/%y")
+# This line of code tells R that our "date" column contains date data! We need to
+# tell R, however, what form the data currently takes so that it can correctly
+# assign months, days, and years. 
+
+str(batdat)
+# As you can see, our column "date" is now read as date data
+
+# Additional package to read and change date data is "lubridate":
+# https://lubridate.tidyverse.org/
+
+
+#### Check your data
+
+head(batdat)
+# Good first pass at checking your data
+
+unique(batdat$species)
+# Returns unique values in the species column. If we had naming inconsistencies,
+# this would be a good way to find them. 
+
+hist(batdat$gdL)
+# Great way to visualize the shape of your data. 
+# If you data has anomalous data or outliers that could be the result of error,
+# this is a great way to find it early. 
+
+summary(batdat$gdL)
+# Returns summary statistics of our data. 
+# Again, great way to find anomalous data. 
+
+plot(batdat$temp, batdat$gdL)
+# The plot() function works like this: plot(x-axis variable, y-axis variable)
+# This is agreat way to just quickly plot some of your data against itself
+# and find anomalous data that could be the result of an error. 
+
+
+
+####
 ####---------------------tidyverse----------------------####
 
 # resources:
@@ -24,9 +79,7 @@ library(tidyverse)
 # I am using an .Rproj file, which sets my working directory within
 # the working directory
 
-batdat = read.csv("data_management/bat_data.csv")
-# in this dataset, each row is a bat that 
-# is positive or negative for P. destructans
+
 
 batcount = read.csv("data_management/bat_count.csv")
 # in this dataset, each row the count of hibernation site

@@ -31,7 +31,7 @@ Pipelines are ways of carefully recording and systematizing the steps you take t
 
 ### Ideally your project will depend on: {.smaller}
 
-- Some data files: spreadsheets storing data
+- Some data files: spreadsheets storing data (.csv files from Excel)
 - Some scripts (more on this later)
 - Something that tells you how these things go together: README file
 
@@ -41,7 +41,8 @@ Pipelines are ways of carefully recording and systematizing the steps you take t
 
 - Determine what your data points/observations/sampling units are (individual bat, acoustic detector, insect trap)
 - Use these to link across data types
-- Stay consistent by planning ahead
+- Stay consistent by planning ahead 
+    - spend a little time up front to save lots of time later
 - Whenever possible, record in a way that reflects your data entry procedure
 
 ## For example...
@@ -68,7 +69,7 @@ Proper file (electronic and hard copy) management will save you TONS of time, he
 - organizing as if you will continuously build the dataset and anticipate you will need to go back
 - "*if someone continued this project, is my data pipeline in a place I could hand it over seamlessly?*"
 
-## An example with acoustic data | multiple sites with multiple detectors and thousands of calls recorded
+## An example with acoustic data | multiple sites; multiple detectors; thousands of calls
 
 This can quickly become overwhelming with an abundance of folders and files; each containing many dates and program outputs
 

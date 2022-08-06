@@ -1,5 +1,5 @@
 ---
-title: "Maintaining data and building pipelines in R"
+title: "Managing data and building pipelines in R"
 author: "Kate E. Langwig, Alex T. Grimaudo, Macy J. Kailing - IBRC 2022"
 output:
   ioslides_presentation: 
@@ -71,7 +71,7 @@ Proper file (electronic and hard copy) management will save you TONS of time, he
 
 ## An example with acoustic data | multiple sites; multiple detectors; thousands of calls
 
-This can quickly become overwhelming with an abundance of folders and files; each containing many dates and program outputs
+This can quickly become overwhelming with an abundance of folders and files; each containing many dates, similar but different output files, lots of varying information
 
 ## Tips for organizing bulky data streams
 - Organize by detector and give each a unique name
@@ -101,10 +101,10 @@ How do you store data that is important but not specific to a single 'observatio
 
 How would someone stepping into the project understand the data you collect?
 
-- We often collect data that is not intuitive to non-bat biologists (wing score, RFA, reproductive condition, etc)
+- We often collect data that isn't intuitive to non-bat biologists (wing score, RFA, reproductive condition, etc)
 
 - ***Make a data dictionary***: 
-    - A table of definitions in an Excel Workbook (or other program)
+    - A table of definitions in an Excel spreadsheet (or other program)
     - Each variable from the datasheet is described thoroughly, including precisely what it measures
 
 ## Record keeping | *long-term pipeline success*
@@ -119,9 +119,137 @@ How would someone stepping into the project understand the data you collect?
 
 ## Now, data is collected, entered to spreadsheets, and filed appropriately!
 
-### Time to work in R..
+## You have collected your data... now what? 
+Now you are ready to work with your data in R!
 
-!!! INSERT ALEX'S SLIDES !!!
+* Important naming conventions
+* Types of data R recognizes
+  + how to work with dates
+* Checking your data for errors
+  + unique()
+  + hist()
+  + head()
+  + summary()
+  + plot()
+  
+## Read in your data
+Please navigate to the below URL to access the data we will be using today:
+
+https://github.com/VTQuantMethodsEEB/ibrc_workshop
+
+
+## Read in your data
+__read.csv()__ is the function to use when reading your spreadsheets into R. 
+
+Using .csv files to store and read-in your data is important!
+
+* Stores data in a text format (human-readable; transferrable)
+* Can store large amounts of data in simple format
+* Can be read by most programs
+
+## Naming conventions
+The R environment is very sensitive to how you name objects and slight differences are important.
+
+* "Maple"
+* " Maple"
+* "maple"
+* "maple "
+* "maple."
+
+Make sure your naming is consistent __in your .csv files!__
+
+## Naming conventions
+Additional good practices when naming things in R: 
+
+* The names of R objects also have to start with a letter, not a number. 
+* Use mostly numbers, underscores (_), and dots (.) in your names.
+* Don't use potentially confusing names like I or O
+* Don't use built-in names (like c, list, or data) for variables.
+* Make readable variable names using camelCase, snake_case, or kebab.case
+* Avoid variableNamesThatAreExcessivelyLong
+
+## Data types
+There are several types of data that R recognizes, listed below: 
+
+* __Logical__: True/False data
+* **Numeric**: All real numbers with or without decimal values
+* **Integer**: Real numbers without decimal values. 
+* **Character**: String data. Thing of this as any unique string of values, such as "1dkdl;" or "Apple_Pie". This is the default data type when R does not recognize data as being of another
+type. 
+* **Factor**: Used to describe items that can have a known set of values (species, habitat, etc.). Categorical variables, in statistical terms. 
+* **Date**: calendar date, e.g. "10-22-1994"
+
+## What type of data do we have? 
+
+A quick way to check what kind of data we have in our dataframe is with the __str() function__
+
+## Dates
+Dates in R are notorious despite being common forms of data!
+
+* Default format on Mac: mo/day/two digit year – e.g. 01/13/18 is January 13, 2018
+* Default format on PC: mo/day/four digit year - e.g. 01/13/2018
+
+We can tell R to read our data as dates using __as.Date()__. 
+
+## Dates: lubridate
+'__Lubridate__' is a package built to make reading and changing date data easy. 
+
+* Can turn numerical data into dates: 20101215 -> 2010-12-15
+* Can quickly change format of dates with simple functions
+* Helpful when extracting data from dates (for example, if you 
+just want to extract month data from your dates)
+* Useful when handling timezone differences. 
+
+## Checking Data
+__Checking your data is very important!__ R can only work with the data you give it -- make sure you're giving it good data. Check for common sources of faulty data:
+
+* Naming inconsistencies
+  + Follow good naming conventions!
+* Duplicated data
+  + Are your repeating values real, or a product of a bug in your code? 
+* Data that doesn't make sense biologically
+  + A little brown bat weighing 72 grams whereas the others weighed around 7-8 grams probably
+  isn't real! 
+  
+__Where should you correct your data?__
+
+## Checking Data
+Some useful tools in R to check your data for errors:
+
+* head() -- gives you first rows of your dataframe
+  + This is a good first pass
+* unique() -- returns all of the unique values contained in a specified dataset
+  + This is particularly useful when looking for naming inconsistencies
+* hist() -- This will show you the frequency distribution of your specified data. 
+  + Good for identifying anomalies or outliers in your data. __Interpret carefully!__
+
+## Checking Data
+Some useful tools in R to check your data for errors:
+
+* summary() -- Returns summary statistics of your specified data. 
+  + Again, good for identifying anomalies or outliers in your data. 
+* Plot your data! 
+  + plot() or ggplot() 
+  + Visualize the shape of your data. Does something look off? 
+  
+## Checking Data
+Check your data frequently! You should check your data when you:
+
+* Read in its .csv file.
+* Change the shape of your data.
+* Merge datasets.
+* Do calculations and make new datasets.  
+
+## Version control
+Using version control and management services will vastly reduce the chance
+a serious error sneaks by. 
+
+* **GitHub** (where you downloaded the data today) is a common code management
+service.
+  + Allows team members to collaborate on code.
+  + Version control and track-changes.
+  + Most journals today ask for your code, and GitHub repositories are a 
+  common way for it to be published. 
 
 ## Introducing Tidyverse
 - the tidyverse is a powerful set of separate packages

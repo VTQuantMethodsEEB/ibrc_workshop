@@ -10,7 +10,16 @@
  - description: type into R console during demo
  
  ## R Data Workshop:
+ 
  - lecture files: [1_data_management_lecture_full.html](https://github.com/VTQuantMethodsEEB/ibrc_workshop/blob/main/data_management/1_data_management_lecture_full.html)
- - description: slides for talk
- - code files:[2_data_management_tidyverse.R](https://github.com/VTQuantMethodsEEB/ibrc_workshop/blob/main/data_management/2_data_management_tidyverse.R)
+ 
+ - description: slides for talk - this looks exactly like presentation
+ 
+ - code files: [2_data_management_tidyverse.R](https://github.com/VTQuantMethodsEEB/ibrc_workshop/blob/main/data_management/2_data_management_tidyverse.R)
+ 
+ - notes files: [data_management_lecture_full.pdf](https://github.com/VTQuantMethodsEEB/ibrc_workshop/blob/main/data_management/data_management_lecture_full.pdf)
+ 
+ - description: lecture slide in note form - pdf. This may be easier for hand writing or annotating notes. 
+ 
+ 
  - run code and follow along with presentation

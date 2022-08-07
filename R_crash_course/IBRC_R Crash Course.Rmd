@@ -1,8 +1,8 @@
 ---
 title: "R Crash Course"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 # Download and read in data
@@ -13,11 +13,11 @@ https://github.com/VTQuantMethodsEEB/ibrc_workshop
 Once you open the project (the .Rproj file), you can read in the data. To do so, there's a simple function, read.csv(), that allows you to easily bring your .csv into the R environment. Simply run below line of code to read in your data: 
 
 ```{r}
-#batdat <- read.csv("bat_data.csv")
+batdat <- read.csv("bat_data.csv")
 ```
 
 ```{r, echo=FALSE}
-batdat<- read.csv("/Users/alexg8/Desktop/IBRC workshops/ibrc_workshop/data_management/bat_data.csv")
+#batdat<- read.csv("/Users/alexg8/Desktop/IBRC #workshops/ibrc_workshop/data_management/bat_data.csv")
 ```
 
 

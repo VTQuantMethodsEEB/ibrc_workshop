@@ -16,13 +16,13 @@ str(batdat)
 
 #### Formatting dates
 
-batdat$date<-as.Date(batdat$date, format="%m/%d/%y")
+batdat$date_long<-as.Date(batdat$date, format="%m/%d/%y")
 # This line of code tells R that our "date" column contains date data! We need to
 # tell R, however, what form the data currently takes so that it can correctly
 # assign months, days, and years. 
 
 str(batdat)
-# As you can see, our column "date" is now read as date data
+# As you can see, our column "date" has been renamed date_long is now read as date data
 
 # Additional package to read and change date data is "lubridate":
 # https://lubridate.tidyverse.org/
@@ -79,8 +79,10 @@ library(tidyverse)
 # I am using an .Rproj file, which sets my working directory within
 # the working directory
 
+# first read in batdat again
+#batdat = read.csv("data_management/bat_data.csv")
 
-
+# read in bat count
 batcount = read.csv("data_management/bat_count.csv")
 # in this dataset, each row the count of hibernation site
 # for a partcular species on a particular date

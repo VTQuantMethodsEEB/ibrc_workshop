@@ -2,14 +2,22 @@
 title: "Managing data and building pipelines in R"
 author: "Kate E. Langwig, Alex T. Grimaudo, Macy J. Kailing - IBRC 2022"
 output:
-  beamer_presentation: default
   ioslides_presentation: 
     incremental: true
+  beamer_presentation: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+## Link to today's materials
+
+https://github.com/VTQuantMethodsEEB/ibrc_workshop
+
+- scroll down to README for links
+- ensure R and RStudio (Posit) are downloaded
+
 
 ## Field, lab, or software program to R
 
@@ -153,7 +161,6 @@ The R environment is very sensitive to how you name objects and slight differenc
 * "Maple"
 * " Maple"
 * "maple"
-* "maple "
 * "maple."
 
 Make sure your naming is consistent __in your .csv files!__
